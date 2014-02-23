@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item android:maxLevel="0" android:drawable="@android:color/white"/>
+
+    <item>
+      <bitmap android:src="@drawable/fennec_background"
+              android:gravity="center"/>
+    </item>    
+
+</layer-list>
