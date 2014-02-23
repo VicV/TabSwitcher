@@ -5,7 +5,7 @@
     android:background="@drawable/fennec_background"
     tools:context=".MainActivity" >
 
-    <LinearLayout 
+    <LinearLayout   
 	    android:gravity="right"
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
@@ -13,9 +13,16 @@
 	    android:layout_gravity="right">
 	    <View 
 	        android:id="@+id/tabs_button"
-	        android:layout_width="30dp"
-	        android:layout_height="30dp"
+	        android:layout_width="50dp"
+	        android:layout_height="50dp"
 		    android:layout_marginTop="10dp"
 		    android:layout_marginRight="50dp"></View>
     </LinearLayout>
+    <com.example.tabswitcher.TabSwitcher 
+        android:id="@+id/switcher"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="gone"
+        android:background="#BF000000">
+    </com.example.tabswitcher.TabSwitcher>
 </RelativeLayout>
