@@ -3,25 +3,38 @@ package com.example.tabswitcher;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.view.View.DragShadowBuilder;
+import android.view.Window;
 
 public class MainActivity extends Activity {
-
+    final String LOGTAG = "MainActivity";
     Context mContext;
     TabSwitcher mSwitcher;
+    View mRoot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
-
+        mRoot = findViewById(R.id.root);
         mContext = this;
         View tabsButton = findViewById(R.id.tabs_button);
         mSwitcher = (TabSwitcher) findViewById(R.id.switcher);
-        tabsButton.setOnClickListener(new TabButtonClickListener());
+        tabsButton.setOnTouchListener(new TabButtonClickListener());
+        mSwitcher.mOnTabItemHoverListener = new TabSwitcher.OnTabItemHoverListener() {
+            @Override
+            public void onTabItemHover(Tab tab) {
+                mRoot.setBackgroundResource(tab.mResId);
+            }
+
+            @Override
+            public void onDrop(Tab item) {}
+        };
     }
 
     @Override
@@ -29,31 +42,17 @@ public class MainActivity extends Activity {
         return false;
     }
 
-    class TabButtonClickListener implements View.OnClickListener {
-        final Animation mAnimationFadeOut;
-        final Animation mAnimationFadeIn;
-
-        public TabButtonClickListener() {
-            mAnimationFadeOut = AnimationUtils.loadAnimation(mContext, R.anim.fade_out);
-            mAnimationFadeOut.setAnimationListener(new Animation.AnimationListener() {
-                @Override public void onAnimationStart(Animation animation) {}
-                @Override public void onAnimationRepeat(Animation animation) {}
-                @Override public void onAnimationEnd(Animation animation) {
-                    mSwitcher.setVisibility(View.GONE);
-                }
-            });
-
-            mAnimationFadeIn = AnimationUtils.loadAnimation(mContext, R.anim.fade_in);
-        }
-
+    class TabButtonClickListener implements View.OnTouchListener {
         @Override
-        public void onClick(final View v) {
-            if (mSwitcher.isShown()) {
-                mSwitcher.startAnimation(mAnimationFadeOut);
-            } else {
-                mSwitcher.setVisibility(View.VISIBLE);
-                mSwitcher.startAnimation(mAnimationFadeIn);
+        public boolean onTouch(View v, MotionEvent event) {
+            Log.w(LOGTAG, event.actionToString(event.getAction()));
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
+                v.startDrag(null, shadowBuilder, null, 0);
+                mSwitcher.show();
+                return true;
             }
+            return false;
         }
     }
 }

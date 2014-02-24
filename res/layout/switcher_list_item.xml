@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="150dp"
+    android:layout_height="100dp"
+    android:paddingTop="20dp"
+    android:gravity="right"
+    android:layout_gravity="right"
+    android:orientation="vertical">
+    <FrameLayout 
+        android:layout_width="150dp"
+        android:layout_height="100dp" 
+        android:background="@drawable/tab_item_bg">
+	    <ImageView
+	        android:id="@+id/thumbnail"
+	        android:src="@drawable/s1" 
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" 
+	        android:scaleType="matrix"
+	        android:layout_marginRight="0dp" />         
+    </FrameLayout>
+</LinearLayout>
