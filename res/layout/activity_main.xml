@@ -18,11 +18,16 @@
 		    android:layout_marginTop="10dp"
 		    android:layout_marginRight="50dp"></View>
     </LinearLayout>
+
     <com.example.tabswitcher.TabSwitcher 
         android:id="@+id/switcher"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:visibility="gone"
-        android:background="#BF000000">
+        android:background="@drawable/switcher_bg"
+	    android:gravity="right"
+	    android:orientation="horizontal"
+	    android:layout_gravity="right">
     </com.example.tabswitcher.TabSwitcher>
+
 </RelativeLayout>
