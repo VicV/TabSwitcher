@@ -1,6 +1,7 @@
 package com.example.tabswitcher;
 
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
@@ -42,14 +43,20 @@ public class MainActivity extends Activity {
         return false;
     }
 
+    private void makeVibration() {
+        final long[] vibrationPattern = {0L, 18L};
+        final Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator.vibrate(vibrationPattern, -1);
+    }
+
     class TabButtonClickListener implements View.OnTouchListener {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            Log.w(LOGTAG, event.actionToString(event.getAction()));
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
                 v.startDrag(null, shadowBuilder, null, 0);
                 mSwitcher.show();
+                makeVibration();
                 return true;
             }
             return false;
