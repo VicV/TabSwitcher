@@ -170,7 +170,11 @@ public class TabSwitcher extends LinearLayout {
 						if (!mInDragMode) {
 							mOnTabItemHoverListener.onDrop(tab);
 							mCurrentTabIndex = position;
-							setCurrentTabAndClose();
+							if (tab instanceof CreateNewTab) {
+								createNewTabAndClose();
+							} else {
+								setCurrentTabAndClose();
+							}
 						}
 					}
 				});
