@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class TabSwitcher extends LinearLayout {
 
@@ -42,10 +43,11 @@ public class TabSwitcher extends LinearLayout {
 		mTabs = new ArrayList<Tab>();
 		mTabs.add(0, new CreateNewTab(R.drawable.fennec_background, R.drawable.fb));
 		for (int i = 0; i < 4; i++) {
-			mTabs.add(new Tab(R.drawable.s1, R.drawable.fb));
-			mTabs.add(new Tab(R.drawable.s2, R.drawable.fb));
-			mTabs.add(new Tab(R.drawable.s3, R.drawable.fb));
-			mTabs.add(new Tab(R.drawable.s4, R.drawable.fb));
+			mTabs.add(new Tab(R.drawable.s1, R.drawable.fb,
+					"Francis Has Changed American CatholicsÕ Attitudes, but Not Their Behavior, a Poll Finds - NYTimes.com"));
+			mTabs.add(new Tab(R.drawable.s2, R.drawable.fb, "Democrats in Senate Reject Pick by Obama - NYTimes.com"));
+			mTabs.add(new Tab(R.drawable.s3, R.drawable.fb, "Home of the Mozilla Project Ñ Mozilla"));
+			mTabs.add(new Tab(R.drawable.s4, R.drawable.fb, "Google"));
 		}
 
 		mList.setAdapter(new TabListAdapter());
@@ -123,7 +125,7 @@ public class TabSwitcher extends LinearLayout {
 	}
 
 	public void setCurrentTabAndClose() {
-		Log.d(LOGTAG, "Current Tab: " + mCurrentTabIndex);
+		hide();
 		final Tab currentTab = mTabs.remove(mCurrentTabIndex);
 		Log.d(LOGTAG, "Current Tab Size: " + mTabs.size());
 		mTabs.add(1, currentTab);
@@ -139,9 +141,8 @@ public class TabSwitcher extends LinearLayout {
 	}
 
 	public void createNewTabAndClose() {
-		mTabs.add(1, new Tab(R.drawable.fennec_background, R.drawable.fb));
+		mTabs.add(1, new Tab(R.drawable.fennec_background, R.drawable.fb, "Firefox Home"));
 		mList.setAdapter(new TabListAdapter());
-		hide();
 	}
 
 	class TabListAdapter extends ArrayAdapter<Tab> {
@@ -164,6 +165,8 @@ public class TabSwitcher extends LinearLayout {
 					image.setImageResource(tab.getResId());
 				}
 				favicon.setImageResource(tab.getFaviconId());
+				TextView titleView = (TextView) convertView.findViewById(R.id.title);
+				titleView.setText(tab.getTitle());
 				convertView.setOnDragListener(new TabItemDragListener(position));
 				convertView.setOnClickListener(new OnClickListener() {
 					@Override public void onClick(View v) {

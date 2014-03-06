@@ -3,10 +3,12 @@ package com.example.tabswitcher;
 public class Tab {
 	private int mResId;
 	private int mFaviconId;
+	private String mTitle;
 
-	public Tab(int resId, int faviconId) {
+	public Tab(int resId, int faviconId, String title) {
 		setResId(resId);
 		setFaviconId(faviconId);
+		setTitle(title);
 	}
 
 	public int getResId() {
@@ -25,4 +27,11 @@ public class Tab {
 		mFaviconId = faviconId;
 	}
 
+	public void setTitle(String title) {
+		mTitle = title;
+	}
+
+	public String getTitle() {
+		return mTitle;
+	}
 }
