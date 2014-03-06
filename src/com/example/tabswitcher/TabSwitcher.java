@@ -45,8 +45,7 @@ public class TabSwitcher extends LinearLayout {
 		mTabs.add(new Tab(R.drawable.s4, R.drawable.fb));
 		mList.setAdapter(new TabListAdapter());
 		setOnDragListener(new OnDragListener() {
-			@Override
-			public boolean onDrag(View v, DragEvent event) {
+			@Override public boolean onDrag(View v, DragEvent event) {
 				switch (event.getAction()) {
 				case DragEvent.ACTION_DRAG_EXITED:
 				case DragEvent.ACTION_DROP:
@@ -63,16 +62,13 @@ public class TabSwitcher extends LinearLayout {
 		});
 		mAnimationFadeOut = AnimationUtils.loadAnimation(mContext, R.anim.fade_out);
 		mAnimationFadeOut.setAnimationListener(new Animation.AnimationListener() {
-			@Override
-			public void onAnimationStart(Animation animation) {
+			@Override public void onAnimationStart(Animation animation) {
 				mList.startAnimation(mAnimationTabsListExit);
 			}
 
-			@Override
-			public void onAnimationRepeat(Animation animation) {}
+			@Override public void onAnimationRepeat(Animation animation) {}
 
-			@Override
-			public void onAnimationEnd(Animation animation) {
+			@Override public void onAnimationEnd(Animation animation) {
 				mList.setVisibility(View.INVISIBLE);
 				setVisibility(View.GONE);
 			}
@@ -81,28 +77,22 @@ public class TabSwitcher extends LinearLayout {
 		mAnimationFadeIn = AnimationUtils.loadAnimation(mContext, R.anim.fade_in);
 		mAnimationTabsListEntrance = AnimationUtils.loadAnimation(mContext, R.anim.tabs_list_entrance);
 		mAnimationTabsListEntrance.setAnimationListener(new Animation.AnimationListener() {
-			@Override
-			public void onAnimationStart(Animation animation) {}
+			@Override public void onAnimationStart(Animation animation) {}
 
-			@Override
-			public void onAnimationRepeat(Animation animation) {}
+			@Override public void onAnimationRepeat(Animation animation) {}
 
-			@Override
-			public void onAnimationEnd(Animation animation) {
+			@Override public void onAnimationEnd(Animation animation) {
 				mList.setVisibility(View.VISIBLE);
 			}
 		});
 
 		mAnimationTabsListExit = AnimationUtils.loadAnimation(mContext, R.anim.tabs_list_exit);
 		mAnimationFadeIn.setAnimationListener(new Animation.AnimationListener() {
-			@Override
-			public void onAnimationStart(Animation animation) {}
+			@Override public void onAnimationStart(Animation animation) {}
 
-			@Override
-			public void onAnimationRepeat(Animation animation) {}
+			@Override public void onAnimationRepeat(Animation animation) {}
 
-			@Override
-			public void onAnimationEnd(Animation animation) {
+			@Override public void onAnimationEnd(Animation animation) {
 				mList.startAnimation(mAnimationTabsListEntrance);
 			}
 		});
@@ -112,8 +102,7 @@ public class TabSwitcher extends LinearLayout {
 		mAnimationTabsHoverExit = AnimationUtils.loadAnimation(mContext, R.anim.tab_item_move_left);
 		mAnimationTabsHoverExit.setFillAfter(true);
 		setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
+			@Override public void onClick(View v) {
 				hide();
 			}
 		});
@@ -128,7 +117,6 @@ public class TabSwitcher extends LinearLayout {
 		startAnimation(mAnimationFadeOut);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void setCurrentTabAndClose() {
 		Log.d(LOGTAG, "Current Tab: " + mCurrentTabIndex);
 		final Tab currentTab = mTabs.remove(mCurrentTabIndex);
@@ -143,8 +131,7 @@ public class TabSwitcher extends LinearLayout {
 			super(mContext, R.layout.switcher_list_item, mTabs);
 		}
 
-		@Override
-		public View getView(final int position, View convertView, ViewGroup parent) {
+		@Override public View getView(final int position, View convertView, ViewGroup parent) {
 			final Tab tab = mTabs.get(position);
 			if (convertView == null) {
 				convertView = LayoutInflater.from(getContext()).inflate(R.layout.switcher_list_item, null);
@@ -154,8 +141,7 @@ public class TabSwitcher extends LinearLayout {
 				favicon.setImageResource(tab.getFaviconId());
 				convertView.setOnDragListener(new TabItemDragListener(position));
 				convertView.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
+					@Override public void onClick(View v) {
 						if (!mInDragMode) {
 							mOnTabItemHoverListener.onDrop(tab);
 							mCurrentTabIndex = position;
@@ -175,8 +161,7 @@ public class TabSwitcher extends LinearLayout {
 			mTabIndex = tabIndex;
 		}
 
-		@Override
-		public boolean onDrag(View v, DragEvent event) {
+		@Override public boolean onDrag(View v, DragEvent event) {
 			switch (event.getAction()) {
 			case DragEvent.ACTION_DRAG_ENTERED:
 				mOnTabItemHoverListener.onTabItemHover(mTabs.get(mList.getPositionForView(v)));
