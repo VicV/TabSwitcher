@@ -1,6 +1,5 @@
 package com.example.tabswitcher;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 import android.content.Context;
@@ -8,16 +7,13 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 public class TabSwitcher extends LinearLayout {
@@ -47,12 +43,10 @@ public class TabSwitcher extends LinearLayout {
         mTabs.add(new Tab(R.drawable.s4, R.drawable.fb)) ;
         mList.setAdapter(new TabListAdapter());
         setOnDragListener(new OnDragListener() {
-            @Override
-            public boolean onDrag(View v, DragEvent event) {
+            @Override public boolean onDrag(View v, DragEvent event) {
                 switch (event.getAction()) {
                     case DragEvent.ACTION_DRAG_EXITED:
-                    case DragEvent.ACTION_DROP:
-                        hide(); break;
+                    case DragEvent.ACTION_DROP: hide(); break;
                     case DragEvent.ACTION_DRAG_STARTED:
                     case DragEvent.ACTION_DRAG_ENTERED:
                     case DragEvent.ACTION_DRAG_ENDED:
@@ -97,8 +91,7 @@ public class TabSwitcher extends LinearLayout {
         mAnimationTabsHoverExit = AnimationUtils.loadAnimation(mContext, R.anim.tab_item_move_left);
         mAnimationTabsHoverExit.setFillAfter(true);
         setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            @Override public void onClick(View v) {
                 hide();
             }
         });
@@ -123,7 +116,7 @@ public class TabSwitcher extends LinearLayout {
         hide();
     }
 
-    class TabListAdapter extends ArrayAdapter {
+    class TabListAdapter extends ArrayAdapter<Tab> {
         public TabListAdapter() {
             super(mContext, R.layout.switcher_list_item, mTabs);
         }
