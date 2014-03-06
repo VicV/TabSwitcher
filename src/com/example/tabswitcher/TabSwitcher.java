@@ -32,6 +32,8 @@ public class TabSwitcher extends LinearLayout {
     final Animation mAnimationTabsHoverExit;
     final LinkedList<Tab> mTabs;
     OnTabItemHoverListener mOnTabItemHoverListener;
+    public boolean mInDragMode = true;
+    public View mRoot = null;
     int mCurrentTabIndex;
     public TabSwitcher(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -97,6 +99,13 @@ public class TabSwitcher extends LinearLayout {
         mAnimationTabsHoverExit.setFillAfter(true);
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        setCurrentTabAndClose();
+        return true;
+    }
+
+
     public void show() {
         setVisibility(View.VISIBLE);
         startAnimation(mAnimationFadeIn);
@@ -122,7 +131,7 @@ public class TabSwitcher extends LinearLayout {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
            final Tab tab = mTabs.get(position);
            if (convertView == null) {
                convertView = LayoutInflater.from(getContext()).inflate(R.layout.switcher_list_item, null);
@@ -130,15 +139,25 @@ public class TabSwitcher extends LinearLayout {
                image.setImageResource(tab.mResId);
                ImageView favicon = (ImageView) convertView.findViewById(R.id.favicon);
                favicon.setImageResource(tab.mFaviconId);
-               convertView.setOnDragListener(new TabItemTouchListener(position));
+               convertView.setOnDragListener(new TabItemDragListener(position));
+               convertView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!mInDragMode) {
+                            mRoot.setBackgroundResource(tab.mResId);
+                            mCurrentTabIndex = position;
+                            setCurrentTabAndClose();
+                        }
+                    }
+            });
            }
            return convertView;
        }
     }
 
-    class TabItemTouchListener implements OnDragListener {
+    class TabItemDragListener implements OnDragListener {
         int mTabIndex;
-        public TabItemTouchListener(int tabIndex) {
+        public TabItemDragListener(int tabIndex) {
             mTabIndex = tabIndex;
         }
 
@@ -155,7 +174,7 @@ public class TabSwitcher extends LinearLayout {
                     //mFavicon.startAnimation(mAnimationTabsHoverExit);
                     break;
                 case DragEvent.ACTION_DROP:
-                    setCurrentTabAndClose();
+                    if (mInDragMode) setCurrentTabAndClose();
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:
                     //mOnTabItemHoverListener.onDrop(mTabs.get(mList.getPositionForView(v)));

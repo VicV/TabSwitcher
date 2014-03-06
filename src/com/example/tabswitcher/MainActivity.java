@@ -5,6 +5,8 @@ import android.os.Vibrator;
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
+import android.view.DragEvent;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,6 +28,7 @@ public class MainActivity extends Activity {
         mContext = this;
         View tabsButton = findViewById(R.id.tabs_button);
         mSwitcher = (TabSwitcher) findViewById(R.id.switcher);
+        mSwitcher.mRoot = mRoot;
         tabsButton.setOnTouchListener(new TabButtonClickListener());
         mSwitcher.mOnTabItemHoverListener = new TabSwitcher.OnTabItemHoverListener() {
             @Override
@@ -36,6 +39,8 @@ public class MainActivity extends Activity {
             @Override
             public void onDrop(Tab item) {}
         };
+        mSwitcher.setOnDragListener(new TabButtonDragListener());
+        tabsButton.setOnTouchListener(new TabButtonClickListener());
     }
 
     @Override
@@ -49,17 +54,43 @@ public class MainActivity extends Activity {
         vibrator.vibrate(vibrationPattern, -1);
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && 
+                mSwitcher.isShown() && !mSwitcher.mInDragMode) {
+            mSwitcher.hide();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
     class TabButtonClickListener implements View.OnTouchListener {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
                 v.startDrag(null, shadowBuilder, null, 0);
+                mSwitcher.mInDragMode = true;
                 mSwitcher.show();
                 makeVibration();
                 return true;
             }
             return false;
+        }
+    }
+
+    class TabButtonDragListener implements View.OnDragListener {
+        @Override
+        public boolean onDrag(View v, DragEvent event) {
+            switch (event.getAction()) {
+                case DragEvent.ACTION_DRAG_ENTERED: break;
+                case DragEvent.ACTION_DRAG_STARTED: break;
+                case DragEvent.ACTION_DRAG_EXITED:  break;
+                case DragEvent.ACTION_DROP: mSwitcher.mInDragMode = false; break;
+                case DragEvent.ACTION_DRAG_ENDED: break;
+                default: break;
+            }
+            return true;
         }
     }
 }
