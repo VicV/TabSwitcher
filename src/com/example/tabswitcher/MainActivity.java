@@ -33,7 +33,7 @@ public class MainActivity extends Activity {
         mSwitcher.mOnTabItemHoverListener = new TabSwitcher.OnTabItemHoverListener() {
             @Override
             public void onTabItemHover(Tab tab) {
-                mRoot.setBackgroundResource(tab.mResId);
+                mRoot.setBackgroundResource(tab.getResId());
             }
 
             @Override
