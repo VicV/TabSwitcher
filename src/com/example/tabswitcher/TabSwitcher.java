@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class TabSwitcher extends LinearLayout {
 
@@ -40,10 +41,10 @@ public class TabSwitcher extends LinearLayout {
 
 		mTabs = new LinkedList<Tab>();
         for (int i = 0; i < 4; i++) {
-        	mTabs.add(new Tab(R.drawable.s1, R.drawable.fb));
-            mTabs.add(new Tab(R.drawable.s2, R.drawable.fb));
-            mTabs.add(new Tab(R.drawable.s3, R.drawable.fb));
-            mTabs.add(new Tab(R.drawable.s4, R.drawable.fb));
+        	mTabs.add(new Tab(R.drawable.s1, R.drawable.fb, "Francis Has Changed American CatholicsÕ Attitudes, but Not Their Behavior, a Poll Finds - NYTimes.com"));
+            mTabs.add(new Tab(R.drawable.s2, R.drawable.fb, "Democrats in Senate Reject Pick by Obama - NYTimes.com"));
+            mTabs.add(new Tab(R.drawable.s3, R.drawable.fb, "Home of the Mozilla Project Ñ Mozilla"));
+            mTabs.add(new Tab(R.drawable.s4, R.drawable.fb, "Google"));
         }
 
 		mList.setAdapter(new TabListAdapter());
@@ -51,14 +52,11 @@ public class TabSwitcher extends LinearLayout {
 			@Override public boolean onDrag(View v, DragEvent event) {
 				switch (event.getAction()) {
 				case DragEvent.ACTION_DRAG_EXITED:
-				case DragEvent.ACTION_DROP:
-					hide();
-					break;
+				case DragEvent.ACTION_DROP: hide(); break;
 				case DragEvent.ACTION_DRAG_STARTED:
 				case DragEvent.ACTION_DRAG_ENTERED:
 				case DragEvent.ACTION_DRAG_ENDED:
-				default:
-					break;
+				default: break;
 				}
 				return true;
 			}
@@ -121,12 +119,10 @@ public class TabSwitcher extends LinearLayout {
 	}
 
 	public void setCurrentTabAndClose() {
-		Log.d(LOGTAG, "Current Tab: " + mCurrentTabIndex);
+		hide();
 		final Tab currentTab = mTabs.remove(mCurrentTabIndex);
-		Log.d(LOGTAG, "Current Tab Size: " + mTabs.size());
 		mTabs.addFirst(currentTab);
 		mList.setAdapter(new TabListAdapter());
-		hide();
 	}
 
 	class TabListAdapter extends ArrayAdapter<Tab> {
@@ -142,6 +138,8 @@ public class TabSwitcher extends LinearLayout {
 				image.setImageResource(tab.getResId());
 				ImageView favicon = (ImageView) convertView.findViewById(R.id.favicon);
 				favicon.setImageResource(tab.getFaviconId());
+				TextView titleView = (TextView) convertView.findViewById(R.id.title);
+				titleView.setText(tab.getTitle());
 				convertView.setOnDragListener(new TabItemDragListener(position));
 				convertView.setOnClickListener(new OnClickListener() {
 					@Override public void onClick(View v) {

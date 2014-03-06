@@ -28,4 +28,11 @@
             android:layout_gravity="bottom|left"
             android:scaleType="centerCrop"/>  
     </FrameLayout>
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#F0F0F0"
+        android:maxLines="1"
+        android:ellipsize="end"/>
 </LinearLayout>
