@@ -1,10 +1,9 @@
 package com.example.tabswitcher;
 
-import android.os.Bundle;
-import android.os.Vibrator;
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
+import android.os.Bundle;
+import android.os.Vibrator;
 import android.view.DragEvent;
 import android.view.KeyEvent;
 import android.view.Menu;
