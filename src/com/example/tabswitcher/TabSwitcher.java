@@ -33,7 +33,6 @@ public class TabSwitcher extends LinearLayout {
     final LinkedList<Tab> mTabs;
     OnTabItemHoverListener mOnTabItemHoverListener;
     public boolean mInDragMode = true;
-    public View mRoot = null;
     int mCurrentTabIndex;
     public TabSwitcher(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -97,14 +96,13 @@ public class TabSwitcher extends LinearLayout {
         mAnimationTabsHoverEnter.setFillAfter(true);
         mAnimationTabsHoverExit = AnimationUtils.loadAnimation(mContext, R.anim.tab_item_move_left);
         mAnimationTabsHoverExit.setFillAfter(true);
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setCurrentTabAndClose();
+            }
+        });
     }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        setCurrentTabAndClose();
-        return true;
-    }
-
 
     public void show() {
         setVisibility(View.VISIBLE);
@@ -144,7 +142,7 @@ public class TabSwitcher extends LinearLayout {
                     @Override
                     public void onClick(View v) {
                         if (!mInDragMode) {
-                            mRoot.setBackgroundResource(tab.mResId);
+                            mOnTabItemHoverListener.onDrop(tab);
                             mCurrentTabIndex = position;
                             setCurrentTabAndClose();
                         }
@@ -167,17 +165,16 @@ public class TabSwitcher extends LinearLayout {
                 case DragEvent.ACTION_DRAG_ENTERED:
                     mOnTabItemHoverListener.onTabItemHover(mTabs.get(mList.getPositionForView(v)));
                     mCurrentTabIndex = mTabIndex;
-                    //mFavicon.startAnimation(mAnimationTabsHoverEnter);
                     break;
                 case DragEvent.ACTION_DRAG_STARTED: break;
-                case DragEvent.ACTION_DRAG_EXITED:
-                    //mFavicon.startAnimation(mAnimationTabsHoverExit);
-                    break;
+                case DragEvent.ACTION_DRAG_EXITED: break;
                 case DragEvent.ACTION_DROP:
-                    if (mInDragMode) setCurrentTabAndClose();
+                    if (mInDragMode) {
+                        setCurrentTabAndClose();
+                        mOnTabItemHoverListener.onDrop(mTabs.get(mTabIndex));
+                    }
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:
-                    //mOnTabItemHoverListener.onDrop(mTabs.get(mList.getPositionForView(v)));
                default: break;
             }
             return true;

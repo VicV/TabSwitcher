@@ -28,7 +28,6 @@ public class MainActivity extends Activity {
         mContext = this;
         View tabsButton = findViewById(R.id.tabs_button);
         mSwitcher = (TabSwitcher) findViewById(R.id.switcher);
-        mSwitcher.mRoot = mRoot;
         tabsButton.setOnTouchListener(new TabButtonClickListener());
         mSwitcher.mOnTabItemHoverListener = new TabSwitcher.OnTabItemHoverListener() {
             @Override
@@ -37,7 +36,9 @@ public class MainActivity extends Activity {
             }
 
             @Override
-            public void onDrop(Tab item) {}
+            public void onDrop(Tab tab) {
+                mRoot.setBackgroundResource(tab.mResId);
+            }
         };
         mSwitcher.setOnDragListener(new TabButtonDragListener());
         tabsButton.setOnTouchListener(new TabButtonClickListener());
