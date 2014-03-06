@@ -1,6 +1,6 @@
 package com.example.tabswitcher;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -27,7 +27,7 @@ public class TabSwitcher extends LinearLayout {
 	final Animation mAnimationTabsListExit;
 	final Animation mAnimationTabsHoverEnter;
 	final Animation mAnimationTabsHoverExit;
-	final LinkedList<Tab> mTabs;
+	final ArrayList<Tab> mTabs;
 	OnTabItemHoverListener mOnTabItemHoverListener;
 	public boolean mInDragMode = true;
 	int mCurrentTabIndex;
@@ -38,13 +38,14 @@ public class TabSwitcher extends LinearLayout {
 		mContext = context;
 		mList = (ListView) findViewById(R.id.list);
 
-		mTabs = new LinkedList<Tab>();
-        for (int i = 0; i < 4; i++) {
-        	mTabs.add(new Tab(R.drawable.s1, R.drawable.fb));
-            mTabs.add(new Tab(R.drawable.s2, R.drawable.fb));
-            mTabs.add(new Tab(R.drawable.s3, R.drawable.fb));
-            mTabs.add(new Tab(R.drawable.s4, R.drawable.fb));
-        }
+		mTabs = new ArrayList<Tab>();
+		mTabs.add(0, new CreateNewTab(R.drawable.fennec_background, R.drawable.fb));
+		for (int i = 0; i < 4; i++) {
+			mTabs.add(new Tab(R.drawable.s1, R.drawable.fb));
+			mTabs.add(new Tab(R.drawable.s2, R.drawable.fb));
+			mTabs.add(new Tab(R.drawable.s3, R.drawable.fb));
+			mTabs.add(new Tab(R.drawable.s4, R.drawable.fb));
+		}
 
 		mList.setAdapter(new TabListAdapter());
 		setOnDragListener(new OnDragListener() {
@@ -124,7 +125,13 @@ public class TabSwitcher extends LinearLayout {
 		Log.d(LOGTAG, "Current Tab: " + mCurrentTabIndex);
 		final Tab currentTab = mTabs.remove(mCurrentTabIndex);
 		Log.d(LOGTAG, "Current Tab Size: " + mTabs.size());
-		mTabs.addFirst(currentTab);
+		mTabs.add(1, currentTab);
+		mList.setAdapter(new TabListAdapter());
+		hide();
+	}
+
+	public void createNewTabAndClose() {
+		mTabs.add(1, new Tab(R.drawable.fennec_background, R.drawable.fb));
 		mList.setAdapter(new TabListAdapter());
 		hide();
 	}
@@ -138,9 +145,16 @@ public class TabSwitcher extends LinearLayout {
 			final Tab tab = mTabs.get(position);
 			if (convertView == null) {
 				convertView = LayoutInflater.from(getContext()).inflate(R.layout.switcher_list_item, null);
-				ImageView image = (ImageView) convertView.findViewById(R.id.thumbnail);
-				image.setImageResource(tab.getResId());
 				ImageView favicon = (ImageView) convertView.findViewById(R.id.favicon);
+
+				ImageView image = (ImageView) convertView.findViewById(R.id.thumbnail);
+				if (tab instanceof CreateNewTab) {
+					favicon.setVisibility(View.GONE);
+					image.setImageResource(((CreateNewTab) tab).getTabImage());
+				} else {
+					favicon.setVisibility(View.VISIBLE);
+					image.setImageResource(tab.getResId());
+				}
 				favicon.setImageResource(tab.getFaviconId());
 				convertView.setOnDragListener(new TabItemDragListener(position));
 				convertView.setOnClickListener(new OnClickListener() {
@@ -165,6 +179,7 @@ public class TabSwitcher extends LinearLayout {
 		}
 
 		@Override public boolean onDrag(View v, DragEvent event) {
+
 			switch (event.getAction()) {
 			case DragEvent.ACTION_DRAG_ENTERED:
 				mOnTabItemHoverListener.onTabItemHover(mTabs.get(mList.getPositionForView(v)));
@@ -176,7 +191,12 @@ public class TabSwitcher extends LinearLayout {
 				break;
 			case DragEvent.ACTION_DROP:
 				if (mInDragMode) {
-					setCurrentTabAndClose();
+					Tab tab = mTabs.get(mList.getPositionForView(v));
+					if (tab instanceof CreateNewTab) {
+						createNewTabAndClose();
+					} else {
+						setCurrentTabAndClose();
+					}
 					mOnTabItemHoverListener.onDrop(mTabs.get(mTabIndex));
 				}
 				break;

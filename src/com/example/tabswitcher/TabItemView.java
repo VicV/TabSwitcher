@@ -8,10 +8,10 @@ import android.view.View;
 public class TabItemView extends View {
 	private Context mContext;
 
-    public TabItemView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-		//LayoutInflater.from(context).inflate(R.layout.switcher, this);
+	public TabItemView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		// LayoutInflater.from(context).inflate(R.layout.switcher, this);
 		mContext = context;
-    }
+	}
 
 }
