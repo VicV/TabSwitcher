@@ -39,10 +39,13 @@ public class TabSwitcher extends LinearLayout {
 		mList = (ListView) findViewById(R.id.list);
 
 		mTabs = new LinkedList<Tab>();
-		mTabs.add(new Tab(R.drawable.s1, R.drawable.fb));
-		mTabs.add(new Tab(R.drawable.s2, R.drawable.fb));
-		mTabs.add(new Tab(R.drawable.s3, R.drawable.fb));
-		mTabs.add(new Tab(R.drawable.s4, R.drawable.fb));
+        for (int i = 0; i < 4; i++) {
+        	mTabs.add(new Tab(R.drawable.s1, R.drawable.fb));
+            mTabs.add(new Tab(R.drawable.s2, R.drawable.fb));
+            mTabs.add(new Tab(R.drawable.s3, R.drawable.fb));
+            mTabs.add(new Tab(R.drawable.s4, R.drawable.fb));
+        }
+
 		mList.setAdapter(new TabListAdapter());
 		setOnDragListener(new OnDragListener() {
 			@Override public boolean onDrag(View v, DragEvent event) {
