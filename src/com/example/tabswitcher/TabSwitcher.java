@@ -134,9 +134,9 @@ public class TabSwitcher extends LinearLayout {
            if (convertView == null) {
                convertView = LayoutInflater.from(getContext()).inflate(R.layout.switcher_list_item, null);
                ImageView image = (ImageView) convertView.findViewById(R.id.thumbnail);
-               image.setImageResource(tab.mResId);
+               image.setImageResource(tab.getResId());
                ImageView favicon = (ImageView) convertView.findViewById(R.id.favicon);
-               favicon.setImageResource(tab.mFaviconId);
+               favicon.setImageResource(tab.getFaviconId());
                convertView.setOnDragListener(new TabItemDragListener(position));
                convertView.setOnClickListener(new OnClickListener() {
                     @Override

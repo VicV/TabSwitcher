@@ -32,12 +32,12 @@ public class MainActivity extends Activity {
         mSwitcher.mOnTabItemHoverListener = new TabSwitcher.OnTabItemHoverListener() {
             @Override
             public void onTabItemHover(Tab tab) {
-                mRoot.setBackgroundResource(tab.mResId);
+                mRoot.setBackgroundResource(tab.getResId());
             }
 
             @Override
             public void onDrop(Tab tab) {
-                mRoot.setBackgroundResource(tab.mResId);
+                mRoot.setBackgroundResource(tab.getResId());
             }
         };
         mSwitcher.setOnDragListener(new TabButtonDragListener());
