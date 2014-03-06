@@ -28,6 +28,7 @@ public class TabSwitcher extends LinearLayout {
 	final Animation mAnimationTabsHoverEnter;
 	final Animation mAnimationTabsHoverExit;
 	final ArrayList<Tab> mTabs;
+	private Tab mLastHoveredTab;
 	OnTabItemHoverListener mOnTabItemHoverListener;
 	public boolean mInDragMode = true;
 	int mCurrentTabIndex;
@@ -130,6 +131,13 @@ public class TabSwitcher extends LinearLayout {
 		hide();
 	}
 
+	public void setCurrentTabAndClose(Tab lastHoveredTab) {
+		mTabs.remove(lastHoveredTab);
+		mTabs.add(1, lastHoveredTab);
+		mList.setAdapter(new TabListAdapter());
+		hide();
+	}
+
 	public void createNewTabAndClose() {
 		mTabs.add(1, new Tab(R.drawable.fennec_background, R.drawable.fb));
 		mList.setAdapter(new TabListAdapter());
@@ -179,17 +187,20 @@ public class TabSwitcher extends LinearLayout {
 		}
 
 		@Override public boolean onDrag(View v, DragEvent event) {
+			boolean dropping = false;
 
 			switch (event.getAction()) {
 			case DragEvent.ACTION_DRAG_ENTERED:
 				mOnTabItemHoverListener.onTabItemHover(mTabs.get(mList.getPositionForView(v)));
 				mCurrentTabIndex = mTabIndex;
+				mLastHoveredTab = mTabs.get(mList.getPositionForView(v));
 				break;
 			case DragEvent.ACTION_DRAG_STARTED:
 				break;
 			case DragEvent.ACTION_DRAG_EXITED:
 				break;
 			case DragEvent.ACTION_DROP:
+				dropping = true;
 				if (mInDragMode) {
 					Tab tab = mTabs.get(mList.getPositionForView(v));
 					if (tab instanceof CreateNewTab) {
@@ -201,6 +212,14 @@ public class TabSwitcher extends LinearLayout {
 				}
 				break;
 			case DragEvent.ACTION_DRAG_ENDED:
+				if (!dropping) {
+					if (!(mLastHoveredTab instanceof CreateNewTab) && mLastHoveredTab != null) {
+						setCurrentTabAndClose(mLastHoveredTab);
+						mLastHoveredTab = null;
+					}
+					hide();
+				}
+				break;
 			default:
 				break;
 			}
