@@ -99,7 +99,7 @@ public class TabSwitcher extends LinearLayout {
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                setCurrentTabAndClose();
+                hide();
             }
         });
     }
