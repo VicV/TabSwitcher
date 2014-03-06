@@ -4,6 +4,7 @@
 		 android:id="@+id/list"
 		 android:visibility="invisible"
 		 android:gravity="right"
+		 android:scrollbars="none"
 		 android:layout_gravity="right"
 		 android:layout_width="fill_parent"
 		 android:layout_height="wrap_content"
