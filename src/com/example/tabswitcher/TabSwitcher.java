@@ -154,34 +154,36 @@ public class TabSwitcher extends LinearLayout {
 			final Tab tab = mTabs.get(position);
 			if (convertView == null) {
 				convertView = LayoutInflater.from(getContext()).inflate(R.layout.switcher_list_item, null);
-				ImageView favicon = (ImageView) convertView.findViewById(R.id.favicon);
+			}
 
-				ImageView image = (ImageView) convertView.findViewById(R.id.thumbnail);
-				if (tab instanceof CreateNewTab) {
-					favicon.setVisibility(View.GONE);
-					image.setImageResource(((CreateNewTab) tab).getTabImage());
-				} else {
-					favicon.setVisibility(View.VISIBLE);
-					image.setImageResource(tab.getResId());
-				}
-				favicon.setImageResource(tab.getFaviconId());
-				TextView titleView = (TextView) convertView.findViewById(R.id.title);
-				titleView.setText(tab.getTitle());
-				convertView.setOnDragListener(new TabItemDragListener(position));
-				convertView.setOnClickListener(new OnClickListener() {
-					@Override public void onClick(View v) {
-						if (!mInDragMode) {
-							mOnTabItemHoverListener.onDrop(tab);
-							mCurrentTabIndex = position;
-							if (tab instanceof CreateNewTab) {
-								createNewTabAndClose();
-							} else {
-								setCurrentTabAndClose();
-							}
+			ImageView favicon = (ImageView) convertView.findViewById(R.id.favicon);
+
+			ImageView image = (ImageView) convertView.findViewById(R.id.thumbnail);
+			if (tab instanceof CreateNewTab) {
+				favicon.setVisibility(View.GONE);
+				image.setImageResource(((CreateNewTab) tab).getTabImage());
+			} else {
+				favicon.setVisibility(View.VISIBLE);
+				image.setImageResource(tab.getResId());
+			}
+			favicon.setImageResource(tab.getFaviconId());
+			TextView titleView = (TextView) convertView.findViewById(R.id.title);
+			titleView.setText(tab.getTitle());
+			convertView.setOnDragListener(new TabItemDragListener(position));
+			convertView.setOnClickListener(new OnClickListener() {
+				@Override public void onClick(View v) {
+					if (!mInDragMode) {
+						mOnTabItemHoverListener.onDrop(tab);
+						mCurrentTabIndex = position;
+						if (tab instanceof CreateNewTab) {
+							createNewTabAndClose();
+						} else {
+							setCurrentTabAndClose();
 						}
 					}
-				});
-			}
+				}
+			});
+
 			return convertView;
 		}
 	}
