@@ -43,11 +43,11 @@ public class TabSwitcher extends LinearLayout {
 		mTabs = new ArrayList<Tab>();
 		mTabs.add(0, new CreateNewTab(R.drawable.fennec_background, R.drawable.fb));
 		for (int i = 0; i < 4; i++) {
-			mTabs.add(new Tab(R.drawable.s1, R.drawable.fb,
+			mTabs.add(new Tab(R.drawable.s1, R.drawable.nyt,
 					"Francis Has Changed American CatholicsÕ Attitudes, but Not Their Behavior, a Poll Finds - NYTimes.com"));
-			mTabs.add(new Tab(R.drawable.s2, R.drawable.fb, "Democrats in Senate Reject Pick by Obama - NYTimes.com"));
-			mTabs.add(new Tab(R.drawable.s3, R.drawable.fb, "Home of the Mozilla Project Ñ Mozilla"));
-			mTabs.add(new Tab(R.drawable.s4, R.drawable.fb, "Google"));
+			mTabs.add(new Tab(R.drawable.s2, R.drawable.usatoday, "Democrats in Senate Reject Pick by Obama - USAToday.com"));
+			mTabs.add(new Tab(R.drawable.s3, R.drawable.ff, "Home of the Mozilla Project Ñ Mozilla"));
+			mTabs.add(new Tab(R.drawable.s4, R.drawable.g, "Google"));
 		}
 
 		mList.setAdapter(new TabListAdapter());
