@@ -1,6 +1,6 @@
 package com.example.tabswitcher;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -28,10 +28,11 @@ public class TabSwitcher extends LinearLayout {
 	final Animation mAnimationTabsListExit;
 	final Animation mAnimationTabsHoverEnter;
 	final Animation mAnimationTabsHoverExit;
-	final ArrayList<Tab> mTabs;
-	private Tab mLastHoveredTab;
+	final LinkedList<Tab> mTabs;
+	private int mLastHoveredTabPosition;
 	OnTabItemHoverListener mOnTabItemHoverListener;
 	public boolean mInDragMode = true;
+	boolean mDropping = false;
 	int mCurrentTabIndex;
 
 	public TabSwitcher(Context context, AttributeSet attrs) {
@@ -40,12 +41,12 @@ public class TabSwitcher extends LinearLayout {
 		mContext = context;
 		mList = (ListView) findViewById(R.id.list);
 
-		mTabs = new ArrayList<Tab>();
-		mTabs.add(0, new CreateNewTab(R.drawable.fennec_background, R.drawable.fb));
+		mTabs = new LinkedList<Tab>();
 		for (int i = 0; i < 1; i++) {
 			mTabs.add(new Tab(R.drawable.s1, R.drawable.nyt,
 					"Francis Has Changed American CatholicsÕ Attitudes, but Not Their Behavior, a Poll Finds - NYTimes.com"));
-			mTabs.add(new Tab(R.drawable.s2, R.drawable.usatoday, "Democrats in Senate Reject Pick by Obama - USAToday.com"));
+			mTabs.add(new Tab(R.drawable.s2, R.drawable.usatoday,
+					"Democrats in Senate Reject Pick by Obama - USAToday.com"));
 			mTabs.add(new Tab(R.drawable.s3, R.drawable.ff, "Home of the Mozilla Project Ñ Mozilla"));
 			mTabs.add(new Tab(R.drawable.s4, R.drawable.g, "Google"));
 		}
@@ -128,20 +129,20 @@ public class TabSwitcher extends LinearLayout {
 		hide();
 		final Tab currentTab = mTabs.remove(mCurrentTabIndex);
 		Log.d(LOGTAG, "Current Tab Size: " + mTabs.size());
-		mTabs.add(1, currentTab);
+		mTabs.addFirst(currentTab);
 		mList.setAdapter(new TabListAdapter());
 		hide();
 	}
 
-	public void setCurrentTabAndClose(Tab lastHoveredTab) {
-		mTabs.remove(lastHoveredTab);
-		mTabs.add(1, lastHoveredTab);
+	public void setCurrentTabAndClose(int lastHoveredTab) {
+		Tab tab = mTabs.remove(lastHoveredTab);
+		mTabs.addFirst(tab);
 		mList.setAdapter(new TabListAdapter());
 		hide();
 	}
 
 	public void createNewTabAndClose() {
-		mTabs.add(1, new Tab(R.drawable.fennec_background, R.drawable.fb, "Firefox Home"));
+		mTabs.addFirst(new Tab(R.drawable.fennec_background, R.drawable.fb, "Firefox Home"));
 		mList.setAdapter(new TabListAdapter());
 	}
 
@@ -159,13 +160,10 @@ public class TabSwitcher extends LinearLayout {
 			ImageView favicon = (ImageView) convertView.findViewById(R.id.favicon);
 
 			ImageView image = (ImageView) convertView.findViewById(R.id.thumbnail);
-			if (tab instanceof CreateNewTab) {
-				favicon.setVisibility(View.GONE);
-				image.setImageResource(((CreateNewTab) tab).getTabImage());
-			} else {
-				favicon.setVisibility(View.VISIBLE);
-				image.setImageResource(tab.getResId());
-			}
+
+			favicon.setVisibility(View.VISIBLE);
+			image.setImageResource(tab.getResId());
+
 			favicon.setImageResource(tab.getFaviconId());
 			TextView titleView = (TextView) convertView.findViewById(R.id.title);
 			titleView.setText(tab.getTitle());
@@ -175,11 +173,9 @@ public class TabSwitcher extends LinearLayout {
 					if (!mInDragMode) {
 						mOnTabItemHoverListener.onDrop(tab);
 						mCurrentTabIndex = position;
-						if (tab instanceof CreateNewTab) {
-							createNewTabAndClose();
-						} else {
-							setCurrentTabAndClose();
-						}
+
+						setCurrentTabAndClose();
+
 					}
 				}
 			});
@@ -196,36 +192,33 @@ public class TabSwitcher extends LinearLayout {
 		}
 
 		@Override public boolean onDrag(View v, DragEvent event) {
-			boolean dropping = false;
-
 			switch (event.getAction()) {
 			case DragEvent.ACTION_DRAG_ENTERED:
 				mOnTabItemHoverListener.onTabItemHover(mTabs.get(mList.getPositionForView(v)));
 				mCurrentTabIndex = mTabIndex;
-				mLastHoveredTab = mTabs.get(mList.getPositionForView(v));
+				mLastHoveredTabPosition = mList.getPositionForView(v);
 				debug("CURRENT TAB: " + mCurrentTabIndex);
 				break;
 			case DragEvent.ACTION_DRAG_STARTED:
+				mDropping = false;
 				break;
 			case DragEvent.ACTION_DRAG_EXITED:
 				break;
 			case DragEvent.ACTION_DROP:
-				dropping = true;
+				mDropping = true;
 				if (mInDragMode) {
 					Tab tab = mTabs.get(mList.getPositionForView(v));
-					if (tab instanceof CreateNewTab) {
-						createNewTabAndClose();
-					} else {
-						setCurrentTabAndClose();
-					}
+
+					setCurrentTabAndClose();
+
 					mOnTabItemHoverListener.onDrop(tab);
 				}
 				break;
 			case DragEvent.ACTION_DRAG_ENDED:
-				if (!dropping) {
-					if (!(mLastHoveredTab instanceof CreateNewTab) && mLastHoveredTab != null) {
-						setCurrentTabAndClose(mLastHoveredTab);
-						mLastHoveredTab = null;
+				if (!mDropping) {
+					if (mLastHoveredTabPosition != -1) {
+						setCurrentTabAndClose(mLastHoveredTabPosition);
+						mLastHoveredTabPosition = -1;
 					}
 					hide();
 				}
