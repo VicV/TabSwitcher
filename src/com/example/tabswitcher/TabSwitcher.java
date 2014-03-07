@@ -42,7 +42,7 @@ public class TabSwitcher extends LinearLayout {
 
 		mTabs = new ArrayList<Tab>();
 		mTabs.add(0, new CreateNewTab(R.drawable.fennec_background, R.drawable.fb));
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 1; i++) {
 			mTabs.add(new Tab(R.drawable.s1, R.drawable.nyt,
 					"Francis Has Changed American CatholicsÕ Attitudes, but Not Their Behavior, a Poll Finds - NYTimes.com"));
 			mTabs.add(new Tab(R.drawable.s2, R.drawable.usatoday, "Democrats in Senate Reject Pick by Obama - USAToday.com"));
@@ -203,6 +203,7 @@ public class TabSwitcher extends LinearLayout {
 				mOnTabItemHoverListener.onTabItemHover(mTabs.get(mList.getPositionForView(v)));
 				mCurrentTabIndex = mTabIndex;
 				mLastHoveredTab = mTabs.get(mList.getPositionForView(v));
+				debug("CURRENT TAB: " + mCurrentTabIndex);
 				break;
 			case DragEvent.ACTION_DRAG_STARTED:
 				break;
@@ -217,7 +218,7 @@ public class TabSwitcher extends LinearLayout {
 					} else {
 						setCurrentTabAndClose();
 					}
-					mOnTabItemHoverListener.onDrop(mTabs.get(mTabIndex));
+					mOnTabItemHoverListener.onDrop(tab);
 				}
 				break;
 			case DragEvent.ACTION_DRAG_ENDED:
@@ -234,6 +235,10 @@ public class TabSwitcher extends LinearLayout {
 			}
 			return true;
 		}
+	}
+
+	private void debug(String msg) {
+		Log.d(LOGTAG, msg);
 	}
 
 	interface OnTabItemHoverListener {
