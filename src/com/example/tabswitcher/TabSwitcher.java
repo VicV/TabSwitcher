@@ -181,7 +181,6 @@ public class TabSwitcher extends LinearLayout {
 				}
 			});
 			convertView.setOnTouchListener(new OnTouchListener() {
-
 				@Override public boolean onTouch(View v, MotionEvent event) {
 					if (event.getAction() == MotionEvent.ACTION_DOWN) {
 						mOnTabItemHoverListener.onTabItemHover(mTabs.get(mList.getPositionForView(v)));
@@ -190,7 +189,6 @@ public class TabSwitcher extends LinearLayout {
 					return false;
 				}
 			});
-
 			return convertView;
 		}
 	}
@@ -219,9 +217,7 @@ public class TabSwitcher extends LinearLayout {
 				mDropping = true;
 				if (mInDragMode) {
 					Tab tab = mTabs.get(mList.getPositionForView(v));
-
 					setCurrentTabAndClose();
-
 					mOnTabItemHoverListener.onDrop(tab);
 				}
 				break;
